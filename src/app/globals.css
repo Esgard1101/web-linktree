@@ -1,0 +1,169 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Superficies — del fondo más profundo al más elevado */
+  --color-ink-950: #06060d;
+  --color-ink-900: #0a0a14;
+  --color-ink-850: #0e0e1a;
+  --color-ink-800: #12121f;
+  --color-ink-700: #181828;
+  --color-ink-600: #232338;
+
+  --color-brand-50: #f3ecff;
+  --color-brand-200: #d6c2ff;
+  --color-brand-300: #b794ff;
+  --color-brand-400: #9d6bff;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+
+  --color-mint-300: #5eeacb;
+  --color-mint-400: #22e0a1;
+  --color-mint-500: #10c98d;
+
+  --color-fg: #f1f5f9;
+  --color-fg-muted: #8b8ba7;
+
+  /* Las variables de fuente las inyecta next/font en layout.tsx */
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-code), ui-monospace, monospace;
+
+  --shadow-glow: 0 0 60px -12px --alpha(var(--color-brand-600) / 55%);
+  --shadow-card: 0 8px 30px -12px rgb(0 0 0 / 0.6);
+
+  --animate-fade-up: fade-up 0.5s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ink-900);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: --alpha(var(--color-brand-600) / 40%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+}
+
+/* Recorre la captura completa de un Linktree dentro de la pantalla del móvil.
+   --desplazamiento lo calcula el componente a partir de las medidas del PNG. */
+@keyframes recorrer-pagina {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(var(--desplazamiento));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cinematica {
+    animation: recorrer-pagina var(--duracion, 24s) ease-in-out infinite alternate;
+  }
+}
+
+.sin-barra {
+  scrollbar-width: none;
+}
+
+.sin-barra::-webkit-scrollbar {
+  display: none;
+}
+
+/* Desfile horizontal continuo. El contenido va duplicado, así que al
+   recorrer la mitad exacta el salto de vuelta es imperceptible. */
+@keyframes desfilar {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .desfile {
+    animation: desfilar var(--duracion-desfile, 45s) linear infinite;
+  }
+
+  .desfile-contenedor:hover .desfile,
+  .desfile-contenedor:focus-within .desfile {
+    animation-play-state: paused;
+  }
+}
+
+/* Tarjeta que se voltea sobre su eje vertical */
+.volteo {
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.volteo-grupo:hover .volteo,
+.volteo-grupo:focus-visible .volteo {
+  transform: rotateY(180deg);
+}
+
+.cara {
+  backface-visibility: hidden;
+}
+
+.cara-trasera {
+  transform: rotateY(180deg);
+}
+
+/* Flotación suave y continua de los elementos decorativos del hero */
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flota {
+    animation: flotar var(--flotacion, 6s) ease-in-out infinite;
+    animation-delay: var(--retraso, 0s);
+  }
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(to right, var(--color-brand-400), var(--color-mint-400));
+  background-clip: text;
+  color: transparent;
+}
